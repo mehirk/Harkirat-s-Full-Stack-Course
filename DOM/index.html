@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Todo List</h1>
+    <div>
+        <div id="todo-1" style="display: flex;">
+            <h4>1. Take class</h4>
+            <button onclick="deleteTodo(1)">Delete</button>
+        </div>
+        
+        <div id="todo-2" style="display: flex;">
+            <h4>2. Go out to eat</h4>
+            <button onclick="deleteTodo(2)">Delete</button>
+        </div>
+    </div>
+
+    <div>
+        <input type="text" id="todo-input"></input>
+        <button>Add Todo</button>
+    </div>
+</body>
+
+<script>
+    function deleteTodo(index) {
+        const element = document.getElementById(`todo-${index}`);
+        element.remove();
+    }
+
+    function addTodo() {
+        const input = document.getElementById('todo-input');
+        const textNode = document.createElement('div');
+        textNode.innerText = input.value;
+    }
+</script>
+</html>
