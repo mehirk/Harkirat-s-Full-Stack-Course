@@ -14,6 +14,12 @@ function checkAgeMiddleware(req, res, next) {
     }
 }
 
+app.get('/ride3', function (req, res) {
+    res.status(200).json({
+        msg: "You have successfully ridden the ride 2"
+    });
+});
+
 app.use(checkAgeMiddleware);
 
 app.get('/ride2', function (req, res) {
