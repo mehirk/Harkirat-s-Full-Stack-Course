@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
-
+const bodyParser = require('body-parser');
 //function that returns a boolean if the age of the person is more than 14.
+
+//common middlewares
+// app.use(express.json());
+// app.use(bodyParser.json());
 
 function checkAgeMiddleware(req, res, next) {
     const age = req.query.age;
