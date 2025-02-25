@@ -28,6 +28,8 @@ app.post('/signup', (req, res) => {
     res.send({
         message: "You have signed up successfully"
     })
+
+    console.log(users);
 })
 
 app.post('/signin', (req, res) => {    
@@ -54,6 +56,8 @@ app.post('/signin', (req, res) => {
         message: "Invalid username or password"
         })
     }
+
+    console.log(users);
 })
 
 
