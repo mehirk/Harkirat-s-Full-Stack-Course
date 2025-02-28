@@ -60,5 +60,33 @@ app.post('/signin', (req, res) => {
     console.log(users);
 })
 
+app.get('/me', (req, res) => {
+    const token = req.headers.token;
+    // const foundUser = users.find((u) => {
+    //     if (u.token === token) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // })
 
-app.listen(3000)
+    let foundUser = null;
+    for (let i = 0; i < users.length; i++ ) {
+        if (users[i].token === token) {
+            foundUser = users[i];
+        }
+    }
+
+    if (foundUser) {
+        res.json({
+            username: foundUser.username,
+            password: foundUser.password
+        })
+    } else {
+        res.json({
+            message: "Sorry not found!"
+        });
+    };
+});
+
+app.listen(3000);
