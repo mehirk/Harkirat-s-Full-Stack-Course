@@ -4,29 +4,16 @@ const JWT_SECRET = 'mehir';
 const app = express();
 app.use(express.json());
 
-users = [];
-//middleware that will check if the user is logged in or not. if the user is not logged in then it will end the request early.
-auth = (req, res, next) => {
-    const token = req.headers.token;
-    const decodedInformation = jwt.verify(token, JWT_SECRET); // this helps us to get the username from the token. 
-    const username = decodedInformation.username;
-    req.username = username;
-
-    const foundUser = users.find((u) => {
-        if (u.username === username) {
-            next();
-        } else {
-            res.json({
-                message: "You are not logged in!"
-            })
-        }
-    })
-}
-
 logger = (req, res, next) => {
     console.log(`${req.method} method request came in`);
     next();
 }
+
+const users = [];
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/public/index.html");
+})
 
 app.post('/signup', logger, (req, res) => { 
     // will come to input validations soon using zod. 
@@ -74,6 +61,24 @@ app.post('/signin', logger, (req, res) => {
 
     console.log(users);
 })
+
+//middleware that will check if the user is logged in or not. if the user is not logged in then it will end the request early.
+auth = (req, res, next) => {
+    const token = req.headers.token;
+    const decodedInformation = jwt.verify(token, JWT_SECRET); // this helps us to get the username from the token. 
+    const username = decodedInformation.username;
+    req.username = username;
+
+    const foundUser = users.find((u) => {
+        if (u.username === username) {
+            next();
+        } else {
+            res.json({
+                message: "You are not logged in!"
+            })
+        }
+    })
+}
 
 app.get('/me', logger, auth, (req, res) => {
     let foundUser = null;
