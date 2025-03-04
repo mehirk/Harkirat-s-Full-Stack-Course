@@ -69,15 +69,15 @@ auth = (req, res, next) => {
     const username = decodedInformation.username;
     req.username = username;
 
-    const foundUser = users.find((u) => {
-        if (u.username === username) {
-            next();
-        } else {
-            res.json({
-                message: "You are not logged in!"
-            })
-        }
-    })
+    const foundUser = users.find(u => u.username === username)
+
+    if (foundUser) {
+        next();
+    } else {
+        res.status(401).send({
+            message: "You are not logged in"
+        })
+    }
 }
 
 app.get('/me', logger, auth, (req, res) => {
