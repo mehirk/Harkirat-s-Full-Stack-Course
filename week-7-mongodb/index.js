@@ -57,8 +57,34 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/todo", (req, res) => {});
+app.post("/todo", auth, (req, res) => {
+  const userId = req.userId;
 
-app.get("/todos", (req, res) => {});
+  res.json({
+    userId: userId,
+  });
+});
+
+app.get("/todos", auth, (req, res) => {
+  const userId = req.userId;
+  res.json({
+    userId: userId,
+  });
+});
+
+function auth(req, res, next) {
+  const token = req.headers.token;
+
+  const decodedData = jwt.verify(token, JWT_SECRET);
+
+  if (decodedData) {
+    req.userId = decodedData.id;
+    next();
+  } else {
+    res.status(403).json({
+      message: "Invalid token",
+    });
+  }
+}
 
 app.listen(3000);
