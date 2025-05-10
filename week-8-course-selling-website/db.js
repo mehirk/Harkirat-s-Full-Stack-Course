@@ -1,0 +1,46 @@
+const mongoose = require("mongoose");
+mongoose.connect("mongodb+srv://mehirk28:Mehirkumar2004$@cluster0.eevp7ak.mongodb.net/course-selling-website");
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
+
+const userSchema = new Schema({
+    email: { type: String, unique: true },
+    password: String,
+    firstName: String,
+    lastName: String
+});
+
+
+const courseSchema = new Schema({
+    title: String,
+    decription: String,
+    price: Number,
+    imageURL: String,
+    creatorId: ObjectId
+});
+
+
+const adminSchema = new Schema({
+    email: { type: String, unique: true },
+    password: String,
+    firstName: String,
+    lastName: String
+});
+
+
+const purchaseSchema = new Schema({
+    courseId: ObjectId,
+    userId: ObjectId
+});
+
+const userModel = mongoose.model("user", userSchema);
+const courseModel = mongoose.model("course", courseSchema);
+const adminModel = mongoose.model("admin", adminSchema);
+const purchaseModel = mongoose.model("purchase", purchaseSchema);
+
+module.exports = {
+    userModel,
+    courseModel,
+    adminModel,
+    purchaseModel
+};
