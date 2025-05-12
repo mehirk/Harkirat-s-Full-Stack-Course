@@ -12,9 +12,9 @@ const userSchema = new Schema({
 
 const courseSchema = new Schema({
     title: String,
-    decription: String,
+    description: String,
     price: Number,
-    imageURL: String,
+    imageUrl: String,
     creatorId: ObjectId
 });
 

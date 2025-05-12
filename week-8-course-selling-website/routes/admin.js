@@ -2,10 +2,10 @@ const { Router } = require('express');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { z } = require("zod");
-const { adminModel } = require("../db");
+const { adminModel, courseModel } = require("../db");
+const { adminMiddleware } = require("../middleware/admin");
 
 const adminRouter = Router();
-
 const JWT_SECRET = process.env.JWT_ADMIN_PASSWORD;
 
 const signupSchema = z.object({
@@ -20,6 +20,12 @@ const signinSchema = z.object({
     password: z.string().min(6)
 });
 
+const courseSchema = z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    imageUrl: z.string().url(),
+    price: z.number().min(0)
+});
 
 adminRouter.post("/signup", async (req, res) => {
     try {
@@ -39,8 +45,7 @@ adminRouter.post("/signup", async (req, res) => {
         });
 
         await newAdmin.save();
-
-        const token = jwt.sign({ email }, JWT_SECRET);
+        const token = jwt.sign({ id: newAdmin._id }, JWT_SECRET);
         res.json({ message: "Admin registered successfully", token });
     } catch (err) {
         res.status(400).json({ message: "Signup failed", error: err.message });
@@ -62,19 +67,40 @@ adminRouter.post("/signin", async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        const token = jwt.sign({ email }, JWT_SECRET);
+        // const token = jwt.sign({ email }, JWT_SECRET);
+        const token = jwt.sign({ id: admin._id}, JWT_SECRET);
+
         res.json({ message: "Signin successful", token });
     } catch (err) {
         res.status(400).json({ message: "Signin failed", error: err.message });
     }
 });
 
-// adminRouter.use(adminMiddleware);
 
-adminRouter.post("/", (req, res) => {
-    res.json({
-        message: "admin endpoint"
-    })
+adminRouter.post("/course", adminMiddleware, async (req, res) => {
+    try {
+        const adminId = req.userId;
+
+        const { title, description, imageUrl, price } = req.body;
+
+        const course = await courseModel.create({
+            title,
+            description,
+            imageUrl: imageUrl,
+            price,
+            creatorId: adminId
+        });
+
+        res.json({
+            message: "course created",
+            courseId: course._id
+        });
+    } catch (err) {
+        res.status(400).json({
+            message: "course creation failed",
+            error: err.message
+        });
+    }
 });
 
 
