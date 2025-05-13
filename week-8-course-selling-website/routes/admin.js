@@ -104,10 +104,38 @@ adminRouter.post("/course", adminMiddleware, async (req, res) => {
 });
 
 
-adminRouter.put("/", (req, res) => {
-    res.json({
-        message: "admin endpoint"
-    })
+adminRouter.put("/course", adminMiddleware, async (req, res) => {
+    try {
+        const adminId = req.userId;
+
+        const { courseId, title, description, imageUrl, price } = req.body;
+
+        if (!courseId) {
+            return res.status(400).json({ message: "Missing courseId in request body" });
+        }
+
+        const course = await courseModel.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+
+        if (course.creatorId.toString() !== adminId) {
+            return res.status(403).json({ message: "You can only update your own courses" });
+        }
+
+        const updateData = {};
+        if (title) updateData.title = title;
+        if (description) updateData.description = description;
+        if (imageUrl) updateData.imageUrl = imageUrl;
+        if (price !== undefined) updateData.price = price;
+
+        await courseModel.findByIdAndUpdate(courseId, updateData);
+
+        res.json({ message: "Course updated successfully" });
+    } catch (err) {
+        res.status(500).json({ message: "Course update failed", error: err.message });
+    }
+
 });
 
 
