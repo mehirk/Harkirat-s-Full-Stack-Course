@@ -139,10 +139,16 @@ adminRouter.put("/course", adminMiddleware, async (req, res) => {
 });
 
 
-adminRouter.get("/bulk", (req, res) => {
-    res.json({
-        message: "admin endpoint"
-    })
+adminRouter.get("/course/bulk", async (req, res) => {
+    const adminId = req.userId;
+    try {
+        const courses = await courseModel.find({
+            creatorId: adminId
+        });
+        res.json({ courses });
+      } catch (e) {
+        res.status(500).json({ message: "Error fetching courses" });
+      }
 });
 
 module.exports = {
