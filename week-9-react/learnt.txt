@@ -1,0 +1,38 @@
+made a todo app in react in replit, learnt state management and what are components and how react does re-rendering of components.
+
+
+code
+
+import "./App.css";
+import { useState } from "react";
+
+export default function App() {
+  const [todos, setTodos] = useState([{
+    title: "Go to gym",
+    description: "Go to gym regularly",
+    done: false
+  }]);
+
+  function addTodo() {
+    let newArray = [];
+
+    for (let i = 0; i < todos.length; i++) {
+      newArray.push(todos[i]);
+    }
+
+    newArray.push({
+      title: document.getElementById("title").value,
+      description: document.getElementById("description").value,
+      done:true,
+    });
+    setTodos(newArray);
+  }
+  
+  return <div>
+    <input id="title" type="text" placeholder="Title"></input>
+    <input id="description" type="text" placeholder="Description"></input>
+    <br />
+    <button onClick={addTodo}>Add Todo</button>
+    {JSON.stringify(todos)};
+  </div>;
+}
