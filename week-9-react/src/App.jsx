@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState , useEffect } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  return <div>
+      <b>
+        hi there
+      </b>
+      <Counter />
+    </div>
+}
+// mounting, re-rendering, unmounting
+function Counter() {
+  // let initialValue = 5
+  const [count, setCount] = useState(0);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  // since just doing it like this will cause an infinite loop, we need to use useEffect
+  // and hook into the lifecycle events of the react. 
+  console.log("counter");
+
+  // guard our setInterval from re-rendering again and again.
+  useEffect(function () {
+    setInterval(() => {
+      setCount(count => count + 1);
+    }, 1000);
+    console.log("mounted");
+  }, []);
+
+  function increaseCount() {
+    setCount(count + 1);
+  }
+
+  function decreaseCount() {
+    setCount(count - 1);
+  }
+
+  function resetCount() {
+    setCount(0);
+  }
+
+
+  return <div>
+    <h1>{count}</h1>
+    <button onClick={increaseCount}>Increase count</button>
+    <button onClick={decreaseCount}>Decrease count</button>
+    <button onClick={resetCount}>Reset count</button>
+  </div>
 }
 
 export default App
