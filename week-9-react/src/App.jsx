@@ -1,10 +1,17 @@
 import { useState , useEffect } from "react";
 
 function App() {
+  let [counterVisible, setCounterVisible] = useState(true);
+
+  useEffect(function() {
+    setInterval(function() {
+      setCounterVisible(c => !c)
+    }, 5000);
+  }, [])
+  
   return <div>
-      <b>
         hi there
-      </b>
+        {counterVisible && <Counter />}
       <Counter />
     </div>
 }
@@ -18,12 +25,21 @@ function Counter() {
   console.log("counter");
 
   // guard our setInterval from re-rendering again and again.
+  // this logic runs on mount
   useEffect(function () {
-    setInterval(() => {
+    console.log("on mount")
+    let clock = setInterval(() => {
+      console.log("from inside setInterval");
       setCount(count => count + 1);
     }, 1000);
-    console.log("mounted");
+
+    return function() {
+    console.log("unmount");
+    clearInterval(clock);
+  }
   }, []);
+
+  
 
   function increaseCount() {
     setCount(count + 1);
