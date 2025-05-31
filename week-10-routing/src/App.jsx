@@ -1,4 +1,3 @@
-
 import './App.css'
 import { BrowserRouter, Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 function App() {
